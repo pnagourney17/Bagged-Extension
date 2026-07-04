@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bagged – Your taste, your tabs, your wishlist</title>
+    <meta name="description" content="Bagged is your one-stop shopping assistant. Save items from any online store, organise wishlists, and share them with friends.">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cream: #FAF6E9;
+            --black: #0A0A0A;
+            --white: #FFFFFF;
+            --gray: #555555;
+            --light-gray: #AAAAAA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--black);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--black);
+        }
+
+        .nav-logo img { width: 36px; height: 36px; }
+
+        .nav-logo span {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .nav-ctas {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-outline-nav {
+            padding: 10px 24px;
+            border: 1.5px solid var(--black);
+            border-radius: 40px;
+            background: transparent;
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-nav:hover { background: #f5f5f5; }
+
+        .btn-solid-nav {
+            padding: 10px 24px;
+            border: 1.5px solid var(--black);
+            border-radius: 40px;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-solid-nav:hover { background: #333; }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--cream);
+            padding: 80px 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .hero-text h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: clamp(28px, 4vw, 48px);
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+
+        .hero-text p {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 36px;
+            max-width: 380px;
+        }
+
+        .btn-chrome {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border: 2px solid var(--black);
+            border-radius: 40px;
+            background: var(--white);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-chrome:hover { background: #f5f5f5; }
+
+        .btn-chrome img { width: 22px; height: 22px; }
+
+        .hero-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-image-placeholder {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: #e8e3d5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== WHAT'S BAGGED ===== */
+        .whats-bagged {
+            padding: 100px 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+            background: var(--white);
+        }
+
+        .whats-bagged-left h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(36px, 5vw, 60px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 40px;
+        }
+
+        .mockup-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .mockup-card img { width: 100%; display: block; }
+
+        .mockup-placeholder {
+            background: #f5f5f5;
+            padding: 20px;
+            font-size: 12px;
+            color: #aaa;
+            text-align: center;
+            aspect-ratio: 3/4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .whats-bagged-right h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .whats-bagged-right p {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .whats-bagged-right h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .bagged-helps ul {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .bagged-helps ul li {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.7;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .bagged-helps ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--black);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 100px 60px;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+        }
+
+        .how-it-works-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 60px;
+        }
+
+        .how-it-works-header img { width: 36px; height: 36px; }
+
+        .how-it-works-header h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+        .how-it-works-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .steps { display: flex; flex-direction: column; gap: 32px; }
+
+        .step h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .step p {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .video-placeholder {
+            aspect-ratio: 4/3;
+            background: var(--black);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-placeholder span {
+            color: #555;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== MEET FOUNDER ===== */
+        .meet-founder {
+            background: var(--cream);
+            padding: 100px 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .founder-photo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .founder-photo {
+            width: 340px;
+            height: 340px;
+            border-radius: 24px;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .founder-photo-placeholder {
+            width: 340px;
+            height: 340px;
+            border-radius: 24px;
+            background: #e0d9c8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .founder-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .founder-text p {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        .founder-signature {
+            font-size: 14px;
+            color: var(--black);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ===== BOTTOM CTA ===== */
+        .bottom-cta {
+            padding: 100px 60px;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .bottom-cta-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .bottom-cta-heading img {
+            height: 48px;
+            width: auto;
+        }
+
+        .bottom-cta-heading h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: clamp(24px, 4vw, 32px);
+            color: var(--black);
+        }
+
+        .btn-solid-large {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--black);
+            color: var(--white);
+            border-radius: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-solid-large:hover {
+            background: #333;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 40px 60px;
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 32px;
+            font-size: 13px;
+            color: var(--black);
+            text-transform: uppercase;
+        }
+
+        footer a {
+            color: var(--black);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        footer a:hover { opacity: 0.6; }
+
+        /* ===== AUTH MODAL (preserved) ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(255,255,255,0.96);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-modal {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-header img { width: 36px; margin-bottom: 12px; }
+
+        .auth-header h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #auth-name-wrapper {
+            display: none;
+            gap: 12px;
+        }
+
+        #auth-name-wrapper.show { display: flex; }
+
+        #auth-confirm-wrapper { display: none; }
+        #auth-confirm-wrapper.show { display: block; }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-form input:focus { border-color: var(--black); }
+
+        .auth-password-wrapper {
+            position: relative;
+        }
+
+        .auth-password-wrapper input { padding-right: 60px; }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 11px;
+            color: #999;
+            cursor: pointer;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: background 0.2s;
+        }
+
+        .auth-btn:hover { background: #333; }
+
+        #auth-error {
+            font-size: 11px;
+            color: #d63031;
+            text-align: center;
+            min-height: 16px;
+            margin-top: 4px;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .auth-switch a {
+            color: var(--black);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            nav { padding: 16px 24px; }
+            .hero, .whats-bagged, .how-it-works-body, .meet-founder {
+                grid-template-columns: 1fr;
+                padding: 60px 24px;
+                gap: 40px;
+            }
+            .how-it-works { padding: 60px 24px; }
+            .bottom-cta { padding: 80px 24px; }
+            .bottom-cta-heading { flex-direction: column; text-align: center; gap: 20px; }
+            footer { padding: 32px 24px; flex-direction: column; gap: 16px; align-items: center; }
+            .nav-logo span { font-size: 13px; }
+        }
+
+        /* Special styles for About page in Chrome Extension context */
+        .extension-about-page .nav-logo img {
+            width: 52px;
+            height: 52px;
+            transition: transform 0.3s ease;
+        }
+        .extension-about-page .nav-logo img:hover {
+            transform: scale(1.08);
+        }
+        .extension-about-page .nav-logo span {
+            font-size: 18px;
+        }
+        .extension-about-page .btn-chrome img {
+            width: 32px;
+            height: 32px;
+        }
+        .extension-about-page .how-it-works-header img {
+            width: 52px;
+            height: 52px;
+        }
+        .extension-about-page .bottom-cta-heading img {
+            height: 64px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">
+            <img src="icon.png" alt="Bagged">
+            <span>Bagged</span>
+        </a>
+        <div class="nav-ctas">
+            <a href="#" class="btn-outline-nav open-auth-btn" data-mode="signup">Sign Up</a>
+            <a href="#" class="btn-solid-nav open-auth-btn" data-mode="login">Log In</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Your taste, your tabs, your wishlist &mdash; all Bagged in one sleek dashboard.</h1>
+            <p>Be the first to organise the way you shop online. Join the waitlist today.</p>
+            <a href="#" class="btn-chrome open-auth-btn" data-mode="signup">
+                <img src="icon.png" alt="Bagged">
+                <span>Join The<br><strong>Waitlist</strong></span>
+            </a>
+        </div>
+        <div class="hero-image">
+            <img src="dashboard-preview.png" alt="Bagged Dashboard">
+        </div>
+    </section>
+
+    <!-- WHAT'S BAGGED -->
+    <section class="whats-bagged">
+        <div class="whats-bagged-left">
+            <h2>What's Bagged?</h2>
+            <div class="mockup-card">
+                <img src="extension-mockup.png" alt="Bagged Extension">
+            </div>
+        </div>
+        <div class="whats-bagged-right">
+            <h3>The Internet Had One Job. I'm Here to Fix It.</h3>
+            <p>Let's be real – online shopping was supposed to make life easier. Instead? You've got 17 tabs open, 4 forgotten carts, 3 "where did I see that again?" moments, and an inbox full of promo codes that may or may not still work.</p>
+            <h4>Enter Bagged</h4>
+            <p>Your one-stop, tab-closing, chaos-calming, "finally-I-can-find-that-thing" shopping assistant.</p>
+            <p>I built Bagged because I was tired of losing track of my stuff. Of switching between stores. Of wishlists that feel more like memory holes. I wanted a place where everything I loved online could live together in harmony — organised, trackable, and shareable. So I made it. And then I gave it a brain.</p>
+            <div class="bagged-helps">
+                <h4>Bagged helps you:</h4>
+                <ul>
+                    <li>Save items from anywhere online.</li>
+                    <li>Organise your dream cart like a digital closet.</li>
+                    <li>Get notified when prices drop (because savings = serotonin).</li>
+                    <li>Share your bags with friends (because who shops alone anymore?).</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works">
+        <div class="how-it-works-header">
+            <img src="icon.png" alt="">
+            <h2>How it works</h2>
+        </div>
+        <div class="how-it-works-body">
+            <div class="steps">
+                <div class="step">
+                    <h3>Download Bagged</h3>
+                    <p>Free as a Google Extension — pin it to your browser and start shopping.</p>
+                </div>
+                <div class="step">
+                    <h3>Create Account</h3>
+                    <p>Sign up for free using your name and email address.</p>
+                </div>
+                <div class="step">
+                    <h3>Browse</h3>
+                    <p>Start shopping on any of your favourite stores.</p>
+                </div>
+                <div class="step">
+                    <h3>Bag It</h3>
+                    <p>Found something you like? Not ready to purchase? Create a wishlist and add it to your Bagged account. Never lose or forget about it again.</p>
+                </div>
+            </div>
+            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+                <video src="demo-video.mp4" controls playsinline style="width: 100%; display: block; background: #000; aspect-ratio: 4/3;">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- MEET THE FOUNDER -->
+    <section class="meet-founder">
+        <div class="founder-photo-wrapper">
+            <img src="founder.jpeg" alt="Pam Nagourney, Founder & CEO" class="founder-photo">
+        </div>
+        <div class="founder-text">
+            <h2>Meet the Founder</h2>
+            <p>I created Bagged out of personal necessity. At 36, I've spent the last 14 years working in fashion e-commerce for top luxury companies across New York and London, yet my own online shopping experience hasn't improved in over a decade.</p>
+            <p>I first had the idea at 20, after an exhaustive search for the perfect black bootie — endless tabs open, items scattered across wishlists and shopping bags, only to lose track, close things accidentally, and abandon the search altogether, then start again.</p>
+            <p>Sixteen years later, there's more choice than ever, with social shopping and influencer links adding to the noise, but still no way to organise it all. So I built Bagged: one place to save everything from across the web and social, stay organised, and finally shop the way I want.</p>
+            <div class="founder-signature">
+                Founder &amp; CEO<br>
+                <strong>Pam Nagourney</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM CTA -->
+    <section class="bottom-cta">
+        <div class="bottom-cta-heading">
+            <img src="icon.png" alt="Bagged Icon">
+            <h2>Everything you love...Bagged</h2>
+        </div>
+        <a href="#" class="btn-solid-large open-auth-btn" data-mode="signup">JOIN THE WAITLIST</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <a href="#">ABOUT</a>
+        <a href="#">CONTACT US</a>
+        <a href="#">TERMS & CONDITIONS</a>
+        <a href="privacy.html">PRIVACY</a>
+    </footer>
+
+    <!-- AUTH MODAL (preserved exactly) -->
+    <div class="modal-overlay" id="auth-modal-overlay">
+        <div class="auth-modal">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <div class="auth-header">
+                <img src="icon.png" alt="Bagged">
+                <h2 id="auth-title">SIGN IN</h2>
+            </div>
+            <form class="auth-form" id="auth-form">
+                <div id="auth-name-wrapper">
+                    <input type="text" id="auth-first-name" placeholder="first name">
+                    <input type="text" id="auth-last-name" placeholder="last name">
+                </div>
+                <input type="email" id="auth-email" placeholder="email address" required>
+                <div class="auth-password-wrapper">
+                    <input type="password" id="auth-password" placeholder="password" required>
+                    <button type="button" class="toggle-password" id="toggle-auth-password">show</button>
+                </div>
+                <div id="auth-confirm-wrapper">
+                    <div class="auth-password-wrapper">
+                        <input type="password" id="auth-confirm-password" placeholder="confirm password">
+                        <button type="button" class="toggle-password" id="toggle-auth-confirm">show</button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn" id="auth-submit-btn">Continue</button>
+            </form>
+            <div id="auth-error"></div>
+            <div class="auth-switch">
+                <span id="auth-switch-text">New to Bagged?</span>
+                <a id="auth-switch-link">Create an account</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="firebase-app.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="landing.js"></script>
+</body>
+</html>
