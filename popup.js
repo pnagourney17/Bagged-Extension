@@ -215,6 +215,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 bagSelect.appendChild(opt);
             }
         });
+
+        // Default to the last bag the user saved to or created
+        const lastBag = localStorage.getItem('lastUsedBag_' + user.uid);
+        if (lastBag) {
+            // Check the bag still exists in the dropdown
+            const exists = Array.from(bagSelect.options).some(opt => opt.value === lastBag);
+            if (exists) bagSelect.value = lastBag;
+        }
     }
 
     addBagBtn.addEventListener('click', async () => {
@@ -222,7 +230,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!user) return;
         const name = document.getElementById('new-bag-name').value.trim();
         if (name) {
-            await db.collection('users').doc(user.uid).collection('wishlists').doc(name).set({ created: true });
+            await db.collection('users').doc(user.uid).collection('wishlists').doc(name).set({ created: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            localStorage.setItem('lastUsedBag_' + user.uid, name);
             await loadBagsFromCloud();
             bagSelect.value = name;
             document.getElementById('new-bag-name').value = "";
@@ -238,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ...window.currentProduct,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
+            localStorage.setItem('lastUsedBag_' + user.uid, selectedBag);
             saveBtn.innerText = "BAGGED!";
             saveBtn.style.backgroundColor = "#27ae60";
             setTimeout(() => {
